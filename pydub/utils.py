@@ -302,27 +302,26 @@ def mediainfo_json(filepath, read_ahead_limit=-1):
         if prop not in stream or stream[prop] == 0:
             stream[prop] = value
 
-    for token in extra_info[stream['index']]:
-        m = re.match(r'([su]([0-9]{1,2})p?) \(([0-9]{1,2}) bit\)$', token)
-        m2 = re.match(r'([su]([0-9]{1,2})p?)( \(default\))?$', token)
-        if m:
-            set_property(stream, 'sample_fmt', m.group(1))
-            set_property(stream, 'bits_per_sample', int(m.group(2)))
-            set_property(stream, 'bits_per_raw_sample', int(m.group(3)))
-        elif m2:
-            set_property(stream, 'sample_fmt', m2.group(1))
-            set_property(stream, 'bits_per_sample', int(m2.group(2)))
-            set_property(stream, 'bits_per_raw_sample', int(m2.group(2)))
-        elif re.match(r'(flt)p?( \(default\))?$', token):
-            set_property(stream, 'sample_fmt', token)
-            set_property(stream, 'bits_per_sample', 32)
-            set_property(stream, 'bits_per_raw_sample', 32)
-        elif re.match(r'(dbl)p?( \(default\))?$', token):
-            set_property(stream, 'sample_fmt', token)
-            set_property(stream, 'bits_per_sample', 64)
-            set_property(stream, 'bits_per_raw_sample', 64)
-    return info
-
+	for token in extra_info[stream['index']]:
+	    m = re.match(r'([su]([0-9]{1,2})p?) (([0-9]{1,2}) bit)$', token)
+	    m2 = re.match(r'([su]([0-9]{1,2})p?)( (default))?$', token)
+	    if m:
+	        set_property(stream, 'sample_fmt', m.group(1))
+	        set_property(stream, 'bits_per_sample', int(m.group(2)))
+	        set_property(stream, 'bits_per_raw_sample', int(m.group(4)))
+	    elif m2:
+	        set_property(stream, 'sample_fmt', m2.group(1))
+	        set_property(stream, 'bits_per_sample', int(m2.group(2)))
+	        set_property(stream, 'bits_per_raw_sample', int(m2.group(2)))
+	    elif re.match(r'(flt)p?( (default))?$', token):
+	        set_property(stream, 'sample_fmt', token)
+	        set_property(stream, 'bits_per_sample', 32)
+	        set_property(stream, 'bits_per_raw_sample', 32)
+	    elif re.match(r'(dbl)p?( (default))?$', token):
+	        set_property(stream, 'sample_fmt', token)
+	        set_property(stream, 'bits_per_sample', 64)
+	        set_property(stream, 'bits_per_raw_sample', 64)
+	return info
 
 def mediainfo(filepath):
     """Return dictionary with media info(codec, duration, size, bitrate...) from filepath
